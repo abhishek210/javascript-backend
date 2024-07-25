@@ -15,4 +15,8 @@ const connectDB = async () => {
   }
 };
 
+// mongodb id and password 
+// id = abhishekyadav9667@gmail.com 
+// pass = Ramlakhany@123
+
 export default connectDB;
