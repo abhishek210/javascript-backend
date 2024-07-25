@@ -24,6 +24,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
   }
 };
 const registerUser = asyncHandler(async (req, res) => {
+  // step to follow
   //get user details from frontend
   // validation - not emptyCells:
   // check if user already exists: username, email
