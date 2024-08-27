@@ -25,19 +25,19 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
-    avatar: {
-      type: String, //cloudinary  url or local path for files
-      required: true,
-    },
-    coverImage: {
-      type: String, //cloudinary  url or local path for files
-    },
-    watchHistory: [
-      {
-        type: Schema.Types.ObjectId, //error is comming here
-        ref: "Video",
-      },
-    ],
+    // avatar: {
+    //   type: String, //cloudinary  url or local path for files
+    //   required: true,
+    // },
+    // coverImage: {
+    //   type: String, //cloudinary  url or local path for files
+    // },
+    // watchHistory: [
+    //   {
+    //     type: Schema.Types.ObjectId, //error is comming here
+    //     ref: "Video",
+    //   },
+    // ],
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -58,11 +58,11 @@ userSchema.pre("save", async function (next) {
   next(); //here is the problem every time password change it will change
 });
 
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.generateAccessToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return Jwt.sign(
     {
       _id: this._id,
@@ -76,7 +76,7 @@ userSchema.method.generateAccessToken = function () {
     }
   );
 };
-userSchema.method.generateRefreshToken = function () {
+userSchema.methods.generateRefreshToken = function () {
   return Jwt.sign(
     {
       _id: this._id,

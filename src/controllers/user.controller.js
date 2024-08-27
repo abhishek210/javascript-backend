@@ -1,8 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+// import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { fetchDataFromAPI } from "../services/apiService.js";
 import jwt from "jsonwebtoken";
 
 const generateAccessAndRefereshTokens = async (userId) => {
@@ -56,30 +57,35 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or userName already exist");
   }
 
-  const avatarLocalPath = req.files?.avatar[0]?.path;
-  console.log("avatarLocalPath", req.files);
-  console.log("avatarLocalPath", avatarLocalPath);
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  const data = await fetchDataFromAPI();
+  const thirdPartyDada = res.json(data);
+  // console.log("thirdPartyDada", thirdPartyDada);
 
-  if (!avatarLocalPath) {
-    console.log("avatarLocalPath", req.files);
-    throw new ApiError(400, "Avatar file is required");
-  }
+  // const avatarLocalPath = req.files?.avatar[0]?.path;
+  // console.log("avatarLocalPath", req.files);
+  // console.log("avatarLocalPath", avatarLocalPath);
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  // if (!avatarLocalPath) {
+  //   console.log("avatarLocalPath", req.files);
+  //   throw new ApiError(400, "Avatar file is required");
+  // }
 
-  if (!avatar) {
-    throw new ApiError(400, "Avatar file is required");
-  }
+  // const avatar = await uploadOnCloudinary(avatarLocalPath);
+  // const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  // if (!avatar) {
+  //   throw new ApiError(400, "Avatar file is required");
+  // }
 
   const user = await User.create({
     fullName,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    // avatar: avatar.url,
+    // coverImage: coverImage?.url || "",
     email,
     password,
     userName: userName.toLowerCase(),
+    thirdPartyDada,
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -92,7 +98,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered Successfully"));
+    .json(new ApiResponse(200, thirdPartyDada, "User registered Successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
